@@ -10,13 +10,13 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Are you Rider?"
+        android:text="@string/are_you_rider"
         android:id="@+id/driver"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Are you a customer?"
+        android:text="@string/are_you_a_customer"
         android:id="@+id/cusomer"/>
 
 

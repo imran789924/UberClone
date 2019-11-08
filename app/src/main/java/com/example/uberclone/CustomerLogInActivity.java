@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.sql.Driver;
+public class CustomerLogInActivity extends AppCompatActivity {
 
-public class DriverLogInActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private Button mLogIn, mRegistration;
 
@@ -31,7 +29,7 @@ public class DriverLogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_log_in);
+        setContentView(R.layout.activity_customer_log_in);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -40,17 +38,17 @@ public class DriverLogInActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
-                    Log.i("StateListener", "AuthSateListener called");
-                    Intent intent = new Intent(DriverLogInActivity.this, MapActivity.class);
+                    Intent intent = new Intent(CustomerLogInActivity.this, MapActivity.class);
                     startActivity(intent);
                     finish();
+                    return;
                 }
             }
         };
 
 
-        mEmail = findViewById(R.id.email);
-        mPassword = findViewById(R.id.password);
+        mEmail = (EditText) findViewById(R.id.email);
+        mPassword = (EditText) findViewById(R.id.password);
 
         mLogIn = findViewById(R.id.login);
         mRegistration = findViewById(R.id.registration);
@@ -61,14 +59,14 @@ public class DriverLogInActivity extends AppCompatActivity {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
 
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(DriverLogInActivity.this, new OnCompleteListener<AuthResult>() {
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLogInActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
-                            Toast.makeText(DriverLogInActivity.this, "Sign up error!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CustomerLogInActivity.this, "Sign up error!", Toast.LENGTH_LONG).show();
                         }else{
                             String user_id = mAuth.getCurrentUser().getUid();
-                            DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(user_id);
+                            DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(user_id);
                             current_user_db.setValue(true);
                         }
                     }
@@ -81,11 +79,11 @@ public class DriverLogInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(DriverLogInActivity.this, new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLogInActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
-                            Toast.makeText(DriverLogInActivity.this, "Sign in error!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CustomerLogInActivity.this, "Sign in error!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -96,20 +94,12 @@ public class DriverLogInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i("onStart", "onStart() in called");
-//        mAuth.addAuthStateListener(firebaseAuthListener);
-        if (null != firebaseAuthListener) {
-            mAuth.addAuthStateListener(firebaseAuthListener);
-        }
+        mAuth.addAuthStateListener(firebaseAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("onStart", "onStop() in called");
-//        mAuth.removeAuthStateListener(firebaseAuthListener);
-        if (null != firebaseAuthListener) {
-            mAuth.removeAuthStateListener(firebaseAuthListener);
-        }
+        mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 }
