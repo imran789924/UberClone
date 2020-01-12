@@ -41,7 +41,7 @@ public class DriverLogInActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
                     Log.i("StateListener", "AuthSateListener called");
-                    Intent intent = new Intent(DriverLogInActivity.this, MapActivity.class);
+                    Intent intent = new Intent(DriverLogInActivity.this, DriverMapActivity.class);
                     startActivity(intent);
                     finish();
                 }
